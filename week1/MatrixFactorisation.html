@@ -7857,7 +7857,7 @@ Epoch 30: train RMSE = 0.3195, val RMSE = 1.1998
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [70]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">raw_user_id</span> <span class="o">=</span> <span class="mi">1</span>
@@ -7868,7 +7868,7 @@ Epoch 30: train RMSE = 0.3195, val RMSE = 1.1998
 
 <span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">B</span><span class="p">[</span><span class="n">m</span><span class="p">])</span>
 <span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">)</span> <span class="c1"># real value of 5.0. Half a star off</span>
 </pre></div>
 </div>
 </div>
@@ -7882,6 +7882,41 @@ Epoch 30: train RMSE = 0.3195, val RMSE = 1.1998
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>4.434811625461317
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3b8d37cb">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">raw_user_id</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">raw_movie_id</span> <span class="o">=</span> <span class="mi">46</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="n">user_to_idx</span><span class="p">[</span><span class="n">raw_user_id</span><span class="p">]</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">movie_to_idx</span><span class="p">[</span><span class="n">raw_movie_id</span><span class="p">]</span>
+
+<span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">B</span><span class="p">[</span><span class="n">m</span><span class="p">])</span>
+<span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">)</span> <span class="c1"># real value of 4.0. It is preety close</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>3.8962159511835965
 </pre>
 </div>
 </div>
@@ -8263,7 +8298,73 @@ r=100, epoch=30, train RMSE=0.2243, val RMSE=1.2140
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=915469c6">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3764a95f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [80]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">user_ids</span><span class="p">,</span> <span class="n">movie_ids</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">user_ids</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">movie_ids</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rmse</span><span class="p">(</span><span class="n">user_ids</span><span class="p">,</span> <span class="n">movie_ids</span><span class="p">,</span> <span class="n">true_ratings</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">user_ids</span><span class="p">,</span> <span class="n">movie_ids</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">true_ratings</span> <span class="o">-</span> <span class="n">preds</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mae</span><span class="p">(</span><span class="n">user_ids</span><span class="p">,</span> <span class="n">movie_ids</span><span class="p">,</span> <span class="n">true_ratings</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">user_ids</span><span class="p">,</span> <span class="n">movie_ids</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">true_ratings</span> <span class="o">-</span> <span class="n">preds</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=915469c6">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [81]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r_values</span><span class="p">:</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s2">"A"</span><span class="p">]</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s2">"B"</span><span class="p">]</span>
+
+    <span class="n">test_rmse</span> <span class="o">=</span> <span class="n">rmse</span><span class="p">(</span><span class="n">test_users</span><span class="p">,</span> <span class="n">test_movies</span><span class="p">,</span> <span class="n">test_ratings</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="n">test_mae</span> <span class="o">=</span> <span class="n">mae</span><span class="p">(</span><span class="n">test_users</span><span class="p">,</span> <span class="n">test_movies</span><span class="p">,</span> <span class="n">test_ratings</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"r=</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2"> | "</span>
+        <span class="sa">f</span><span class="s2">"RMSE=</span><span class="si">{</span><span class="n">test_rmse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | "</span>
+        <span class="sa">f</span><span class="s2">"MAE=</span><span class="si">{</span><span class="n">test_mae</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | "</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>r=2 | RMSE=1.1342 | MAE=0.7974 | 
+r=5 | RMSE=1.1501 | MAE=0.8126 | 
+r=10 | RMSE=1.1633 | MAE=0.8259 | 
+r=20 | RMSE=1.1770 | MAE=0.8354 | 
+r=50 | RMSE=1.1884 | MAE=0.8531 | 
+r=100 | RMSE=1.2075 | MAE=0.8764 | 
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=109ef888">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
