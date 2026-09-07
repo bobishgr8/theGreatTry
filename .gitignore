@@ -1,3 +1,7 @@
 datasets/
 datasets-cleaned/
 annotated papers/
+__pycache__/
+*.pyc
+*.log
+experiments/results/
