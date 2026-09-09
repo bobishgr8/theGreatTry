@@ -52,7 +52,15 @@ SEED = 42
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 N_THREADS = os.cpu_count() or 1
-DEFAULT_WORKERS = min(4, N_THREADS)
+# Defaults to 1 (sequential), not more, on purpose: this machine has only
+# ~16GB host RAM and an 8GB GPU shared with a normal desktop session, and
+# each extra worker holds its own full copy of the dataset in both - on
+# ML-25M, 4 workers pushed GPU memory to 96% and repeatedly triggered
+# system-wide low-memory process kills. Pass --workers N explicitly (e.g.
+# on the smaller datasets, or a machine with more headroom) to opt into
+# more concurrency; a bare invocation should never risk destabilizing the
+# whole machine.
+DEFAULT_WORKERS = 1
 torch.set_num_threads(N_THREADS)
 
 # Deliberately modest so a full overnight run across all five datasets
@@ -123,14 +131,28 @@ def train_plain_mf(
     model's ability to reach a sane baseline. RMSE is unaffected by this
     shift (it's invariant to subtracting the same constant from both sides),
     only trainability is; the mean is added back wherever this model's
-    output is used for an actual rating prediction."""
+    output is used for an actual rating prediction.
+
+    weight_decay is applied manually below, scoped to each batch's touched
+    embedding rows, rather than via Adam's own weight_decay= argument.
+    Adam's built-in weight_decay shrinks the *entire* parameter tensor on
+    every optimizer step, including embedding rows that weren't in this
+    batch at all - harmless when batch_size is large relative to n_users
+    (nearly every row gets touched nearly every step anyway, e.g. ML-100K's
+    610 users vs. a 4096 batch), catastrophic when it isn't (ML-25M's
+    162,541 users means <3% of rows get real gradient signal per step while
+    100% get shrunk regardless, compounding across ~4,300 steps/epoch until
+    every embedding is crushed toward zero - confirmed empirically: this
+    collapsed every single grid config to the trivial predict-the-mean
+    baseline on ML-25M, regardless of k/lr/weight_decay, even in a config
+    that scores well on the smaller datasets)."""
     device = tr_u.device
     mean_rating = tr_r.mean()
     tr_r_c = tr_r - mean_rating
     va_r_c = va_r - mean_rating
 
     model = PlainMF(n_users, n_items, k, seed).to(device)
-    opt = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+    opt = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=0.0)
     gen = torch.Generator(device=device).manual_seed(seed)
 
     best_rmse = float("inf")
@@ -144,8 +166,10 @@ def train_plain_mf(
         model.train()
         for idx in minibatches(len(tr_r), batch_size, device, gen):
             opt.zero_grad()
-            pred = model(tr_u[idx], tr_i[idx])
-            loss = torch.mean((pred - tr_r_c[idx]) ** 2)
+            u_idx, i_idx = tr_u[idx], tr_i[idx]
+            pred = (model.A[u_idx] * model.B[i_idx]).sum(dim=1)
+            reg = weight_decay * (model.A[u_idx].pow(2).sum() + model.B[i_idx].pow(2).sum()) / len(idx)
+            loss = torch.mean((pred - tr_r_c[idx]) ** 2) + reg
             loss.backward()
             opt.step()
 

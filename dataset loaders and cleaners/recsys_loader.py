@@ -102,9 +102,23 @@ def _finalize(df: pd.DataFrame, name: str, preprocessing: str, seed: int) -> Rat
 
     user_codes, user_ids = _remap(df["user_id"])
     item_codes, item_ids = _remap(df["item_id"])
-    ratings = df["rating"].to_numpy(dtype=np.float64)
+    ratings = df["rating"].to_numpy(dtype=np.float32)
+    del df  # the raw dataframe (largest single object for datasets like ML-25M) is no longer needed
 
-    table = np.column_stack([user_codes, item_codes, ratings])
+    # float32 exactly represents every integer up to 2**24 (~16.7M); every
+    # dataset here has far fewer users/items than that, so this halves the
+    # memory of every array below with zero precision loss - the difference
+    # between a load that fits comfortably and one that spikes memory hard
+    # enough to get the process killed on a 16GB machine (see ML-25M). Casting
+    # the codes to float32 *before* stacking matters: column_stack would
+    # otherwise promote everything to float64 first (mixing int64 codes with
+    # float32 ratings) and only shrink it after, briefly doubling peak memory
+    # right back to where we started.
+    table = np.column_stack([
+        user_codes.astype(np.float32, copy=False),
+        item_codes.astype(np.float32, copy=False),
+        ratings,
+    ])
     train_idx, val_idx, test_idx = _split_indices(len(table), SPLIT_RATIOS[preprocessing], seed)
     return RatingSplit(
         name=name,
