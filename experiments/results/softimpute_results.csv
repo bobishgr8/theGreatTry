@@ -1,0 +1,25 @@
+method,dataset,p,selective_rmse,best_sigma,val_rmse,seconds
+SoftImpute (rand),ml-100k,0.0,0.8891,10.0,0.9138,31.5
+SoftImpute (rand),ml-100k,0.05,0.89,10.0,0.9138,31.5
+SoftImpute (rand),ml-100k,0.1,0.893,10.0,0.9138,31.5
+SoftImpute (rand),ml-100k,0.2,0.8959,10.0,0.9138,31.5
+SoftImpute (supp),ml-100k,0.0,0.8891,10.0,0.9138,31.5
+SoftImpute (supp),ml-100k,0.05,0.8844,10.0,0.9138,31.5
+SoftImpute (supp),ml-100k,0.1,0.8804,10.0,0.9138,31.5
+SoftImpute (supp),ml-100k,0.2,0.8739,10.0,0.9138,31.5
+SoftImpute (rand),ml-1m,0.0,0.881,10.0,0.8979,4579.9
+SoftImpute (rand),ml-1m,0.05,0.8816,10.0,0.8979,4579.9
+SoftImpute (rand),ml-1m,0.1,0.8816,10.0,0.8979,4579.9
+SoftImpute (rand),ml-1m,0.2,0.8806,10.0,0.8979,4579.9
+SoftImpute (supp),ml-1m,0.0,0.881,10.0,0.8979,4580.0
+SoftImpute (supp),ml-1m,0.05,0.8752,10.0,0.8979,4580.0
+SoftImpute (supp),ml-1m,0.1,0.8719,10.0,0.8979,4580.0
+SoftImpute (supp),ml-1m,0.2,0.8684,10.0,0.8979,4580.0
+SoftImpute (rand),douban,0.0,0.7706,10.0,0.79,2095.0
+SoftImpute (rand),douban,0.05,0.7705,10.0,0.79,2095.0
+SoftImpute (rand),douban,0.1,0.7704,10.0,0.79,2095.0
+SoftImpute (rand),douban,0.2,0.7708,10.0,0.79,2095.0
+SoftImpute (supp),douban,0.0,0.7706,10.0,0.79,2095.1
+SoftImpute (supp),douban,0.05,0.7636,10.0,0.79,2095.1
+SoftImpute (supp),douban,0.1,0.7598,10.0,0.79,2095.1
+SoftImpute (supp),douban,0.2,0.7537,10.0,0.79,2095.1

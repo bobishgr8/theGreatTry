@@ -1,0 +1,5 @@
+method,dataset,p,selective_rmse,best_hidden,best_layers,best_lr,best_lam,val_rmse,seconds
+UA-IMC (U_hat),ml-100k,0.0,0.8876,16,3,0.003,0.0001,0.8991,1178.1
+UA-IMC (U_hat),ml-100k,0.05,0.863,16,3,0.003,0.0001,0.8991,1178.1
+UA-IMC (U_hat),ml-100k,0.1,0.8476,16,3,0.003,0.0001,0.8991,1178.1
+UA-IMC (U_hat),ml-100k,0.2,0.8182,16,3,0.003,0.0001,0.8991,1178.1
