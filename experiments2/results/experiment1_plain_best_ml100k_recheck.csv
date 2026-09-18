@@ -1,0 +1,2 @@
+method,dataset,best_r,val_rmse,test_rmse,seconds
+"Plain MF (numpy, r-only)",ml-100k,2,0.9555,0.9666,49.9

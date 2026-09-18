@@ -1,0 +1,13 @@
+method,dataset,sigma,val_rmse,seconds
+SoftImpute,ml-100k,0.01,1.1307,0.5
+SoftImpute,ml-100k,0.1,1.1106,7.1
+SoftImpute,ml-100k,1.0,1.0164,17.3
+SoftImpute,ml-100k,3.0,0.9932,14.9
+SoftImpute,ml-100k,5.0,0.9803,13.0
+SoftImpute,ml-100k,7.0,0.9718,11.5
+SoftImpute,ml-100k,10.0,0.966,9.9
+SoftImpute,ml-100k,13.0,0.9674,8.7
+SoftImpute,ml-100k,15.0,0.9721,7.9
+SoftImpute,ml-100k,20.0,0.9923,6.4
+SoftImpute,ml-100k,30.0,1.0365,3.8
+SoftImpute,ml-100k,100.0,1.1307,0.2

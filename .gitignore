@@ -4,4 +4,4 @@ annotated papers/
 __pycache__/
 *.pyc
 *.log
-experiments/results/
+experiments2/_subgraph_cache/

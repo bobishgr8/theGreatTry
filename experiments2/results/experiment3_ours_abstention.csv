@@ -1,0 +1,21 @@
+method,dataset,p,selective_rmse,best_r,best_lam,val_rmse,seconds
+"Ours (numpy, r x lambda)",ml-100k,0.0,0.9189,2,0.4,0.9221,43.6
+"Ours (numpy, r x lambda)",ml-100k,0.05,0.8891,2,0.4,0.9221,43.6
+"Ours (numpy, r x lambda)",ml-100k,0.1,0.8749,2,0.4,0.9221,43.6
+"Ours (numpy, r x lambda)",ml-100k,0.2,0.8601,2,0.4,0.9221,43.6
+"Ours (numpy, r x lambda)",ml-1m,0.0,0.8682,5,0.7,0.8729,430.3
+"Ours (numpy, r x lambda)",ml-1m,0.05,0.8464,5,0.7,0.8729,430.3
+"Ours (numpy, r x lambda)",ml-1m,0.1,0.8316,5,0.7,0.8729,430.3
+"Ours (numpy, r x lambda)",ml-1m,0.2,0.8072,5,0.7,0.8729,430.3
+"Ours (numpy, r x lambda)",douban,0.0,0.7674,3,0.5,0.7703,556.9
+"Ours (numpy, r x lambda)",douban,0.05,0.7464,3,0.5,0.7703,556.9
+"Ours (numpy, r x lambda)",douban,0.1,0.7317,3,0.5,0.7703,556.9
+"Ours (numpy, r x lambda)",douban,0.2,0.7071,3,0.5,0.7703,556.9
+"Ours (numpy, r x lambda)",amazon-games,0.0,1.174,100,1.6,1.1844,228.4
+"Ours (numpy, r x lambda)",amazon-games,0.05,1.1453,100,1.6,1.1844,228.4
+"Ours (numpy, r x lambda)",amazon-games,0.1,1.1365,100,1.6,1.1844,228.4
+"Ours (numpy, r x lambda)",amazon-games,0.2,1.1325,100,1.6,1.1844,228.4
+"Ours (numpy, r x lambda)",ml-100k,0.0,0.9834,2,0.4,0.9795,49.3
+"Ours (numpy, r x lambda)",ml-100k,0.05,0.9541,2,0.4,0.9795,49.3
+"Ours (numpy, r x lambda)",ml-100k,0.1,0.936,2,0.4,0.9795,49.3
+"Ours (numpy, r x lambda)",ml-100k,0.2,0.9081,2,0.4,0.9795,49.3

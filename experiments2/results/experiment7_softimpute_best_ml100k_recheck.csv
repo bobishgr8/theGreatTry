@@ -1,0 +1,13 @@
+method,dataset,p,selective_rmse,best_sigma,val_rmse,seconds
+SoftImpute (rand),ml-100k,0.0,0.9551,10.0,0.966,111.0
+SoftImpute (rand),ml-100k,0.05,0.9576,10.0,0.966,111.0
+SoftImpute (rand),ml-100k,0.1,0.9582,10.0,0.966,111.0
+SoftImpute (rand),ml-100k,0.2,0.957,10.0,0.966,111.0
+SoftImpute (val),ml-100k,0.0,0.9551,10.0,0.966,111.0
+SoftImpute (val),ml-100k,0.05,0.9525,10.0,0.966,111.0
+SoftImpute (val),ml-100k,0.1,0.9468,10.0,0.966,111.0
+SoftImpute (val),ml-100k,0.2,0.932,10.0,0.966,111.0
+SoftImpute (supp),ml-100k,0.0,0.9551,10.0,0.966,111.0
+SoftImpute (supp),ml-100k,0.05,0.9484,10.0,0.966,111.0
+SoftImpute (supp),ml-100k,0.1,0.9423,10.0,0.966,111.0
+SoftImpute (supp),ml-100k,0.2,0.9408,10.0,0.966,111.0

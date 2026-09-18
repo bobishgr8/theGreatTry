@@ -1,0 +1,5 @@
+method,dataset,p,selective_rmse,best_hidden,best_rank,best_lam,val_rmse,seconds
+UA-IMC (faithful),ml-100k,0.0,0.9409,32,15,0.03,0.9488,835.4
+UA-IMC (faithful),ml-100k,0.05,0.9289,32,15,0.03,0.9488,835.4
+UA-IMC (faithful),ml-100k,0.1,0.9247,32,15,0.03,0.9488,835.4
+UA-IMC (faithful),ml-100k,0.2,0.9193,32,15,0.03,0.9488,835.4

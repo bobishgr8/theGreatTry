@@ -1,0 +1,6 @@
+method,dataset,best_r,best_lam,val_rmse,test_rmse,seconds
+"Lasso MF (numpy, r x lambda)",ml-100k,2,0.001,0.8986,0.9,602.1
+"Lasso MF (numpy, r x lambda)",ml-1m,5,0.001,0.871,0.8667,5765.8
+"Lasso MF (numpy, r x lambda)",douban,3,0.001,0.7706,0.7675,7430.9
+"Lasso MF (numpy, r x lambda)",amazon-games,100,0.01,1.1622,1.1526,2870.6
+"Lasso MF (numpy, r x lambda)",ml-100k,2,0.001,0.9554,0.9666,25.4

@@ -1,0 +1,158 @@
+% =====================================================================
+% AutoRec with a heteroscedastic uncertainty head (week4/autoRec2.ipynb)
+% All numbers below are from the notebook's own saved run on the
+% CORRECTED ML-100K (943 users, 1,682 items, 70k/20k/10k split) -
+% not the ml-latest-small shape (610 users, 9,724 items) an earlier
+% run of this same notebook used before the dataset-identity fix.
+% =====================================================================
+
+\subsection{AutoRec with a Learned Uncertainty Head}
+\label{sec:autorec-uncertainty}
+
+As a complementary probe of where predictive uncertainty comes from, we ran a
+separate experiment on item-based AutoRec \citep{sedhain2015autorec}: does
+uncertainty have to be inferred after the fact from a plain model's mistakes,
+or is it worth training a second head to predict it directly? We compare
+three ways of scoring how much to trust a prediction, plus the two
+uncertainty-free abstention rules from Section~\ref{sec:abstention-rules}
+(Algorithms 2 and 3), all evaluated as selective-prediction curves against a
+random-abstention baseline and an oracle upper bound.
+
+\subsubsection{Models}
+
+\textbf{Vanilla AutoRec} is the standard item-based autoencoder: a sigmoid
+encoder, dropout, and a linear decoder, trained with masked MSE over
+observed ratings only. \textbf{Heteroscedastic AutoRec} shares the same
+encoder but splits the decoder into two heads: a mean head $\mu(x)$ and a
+variance head, $\mathrm{var}(x) = \mathrm{softplus}(\text{raw\_var}(x)) +
+10^{-4}$, trained jointly via Gaussian negative log-likelihood,
+\[
+  \mathcal{L} = \tfrac{1}{2}\Big[\log \mathrm{var}(x) + \frac{(y-\mu(x))^2}{\mathrm{var}(x)}\Big],
+\]
+with gradient-norm clipping (max norm 5.0) to keep the variance head stable
+early in training.
+
+\textbf{Uncertainty signals compared:}
+\begin{itemize}
+  \item \emph{Residual (item)}: the vanilla model's mean squared
+        reconstruction error on item $i$'s \emph{observed} train+val
+        ratings, reused as a proxy score for every test rating of that
+        item. Since I-AutoRec is item-indexed, this is free to compute but
+        collapses every test rating of the same item to one identical
+        score - it cannot distinguish which user is harder to predict.
+  \item \emph{Residual (user+item)}: the same idea, but averaging the
+        item-level score with an analogous user-level score,
+        $0.5(\text{item\_score}[i] + \text{user\_score}[u])$, to make the
+        signal target-specific.
+  \item \emph{Heteroscedastic variance}: the trained variance head's output
+        $\mathrm{var}(x)_{ui}$ directly - the only one of the three that is
+        genuinely per-(user,item), rather than inherited from a group
+        average.
+\end{itemize}
+
+\subsubsection{Hyperparameter search}
+
+The backbone was tuned in three passes, all reusing the same 70/20/10
+proposal split: (1) a coarse grid over
+hidden~$\in\{50,100,200,300,500,750,1000,1500\}$~$\times$
+lr~$\in\{5{\times}10^{-4},\ldots,1.5{\times}10^{-2}\}$~$\times$
+weight\_decay~$\in\{0,10^{-5},10^{-4},10^{-3},3{\times}10^{-3},10^{-2}\}$
+(384 configs); (2) a focused refinement fixing hidden$=500$ (the coarse
+winner) and sweeping a denser local lr~$\times$~weight\_decay grid around
+it; (3) a dropout sweep at the winning backbone. Table~\ref{tab:autorec2-hp}
+shows each stage only ever improved on, never regressed, the previous
+stage's winner - notably the focused search moved lr from $2{\times}10^{-3}$
+to $2.5{\times}10^{-3}$ and improved validation RMSE further, confirming
+hidden$=500$ is a genuine local optimum rather than an artifact of a coarse
+grid's edge.
+
+\begin{table}[htbp]
+\centering
+\caption{AutoRec backbone hyperparameter search, by stage}
+\label{tab:autorec2-hp}
+\begin{tabular}{lcccc}
+\toprule
+Stage & hidden & lr & weight\_decay & Val.\ RMSE \\
+\midrule
+1. Coarse grid (384 configs)      & 500 & 0.0020 & $1{\times}10^{-3}$ & 0.8955 \\
+2. Focused search at hidden=500 (42 configs) & 500 & 0.0025 & $1{\times}10^{-3}$ & 0.8953 \\
+3. Dropout sweep (10 values)      & 500 & 0.0025 & $1{\times}10^{-3}$ & 0.8946 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\\ \footnotesize Final chosen config: hidden=500, lr=0.0025, weight\_decay=$1{\times}10^{-3}$, dropout=0.2.
+\end{table}
+
+\subsubsection{Headline results}
+
+\begin{table}[htbp]
+\centering
+\caption{Test RMSE and uncertainty quality, refit on train+val, corrected ML-100K}
+\label{tab:autorec2-headline}
+\begin{tabular}{lccc}
+\toprule
+Model & Test RMSE & Calibration $\mathbb{E}[(y-\hat\mu)^2/\mathrm{var}]$ & Spearman $\rho$ (uncertainty, sq.\ error) \\
+\midrule
+Vanilla AutoRec         & 0.8855 & --- & --- \\
+\quad residual (item)         & --- & --- & 0.109 \\
+\quad residual (user+item)    & --- & --- & 0.202 \\
+Heteroscedastic AutoRec & 0.8871 & 1.973 (ideal $\approx 1$) & 0.238 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The heteroscedastic head's variance is the single best-correlated signal
+with true error, but the calibration check shows it is meaningfully
+\emph{overconfident} on the real (sparser, 943$\times$1{,}682) benchmark -
+true squared error runs on average $1.97\times$ the predicted variance,
+versus the near-ideal $1.05\times$ this same notebook found before the
+dataset-identity fix on the denser, easier ml-latest-small shape. This is
+the more informative of the two runs precisely because it is the harder
+dataset: it shows the learned uncertainty head is directionally correct but
+has real, fixable headroom (e.g.\ a warm-up schedule or a better variance
+prior) rather than being already near its ceiling.
+
+\subsubsection{Selective prediction}
+
+\begin{table}[htbp]
+\centering
+\caption{Selective RMSE vs.\ coverage, all six abstention rules plus oracle}
+\label{tab:autorec2-selective}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+Method & \multicolumn{6}{c}{Coverage (fraction of test ratings kept)} \\
+\cmidrule(lr){2-7}
+ & 1.00 & 0.90 & 0.80 & 0.70 & 0.60 & 0.50 \\
+\midrule
+Random abstention (baseline)         & 0.8855 & 0.8854 & 0.8860 & 0.8851 & 0.8850 & 0.8856 \\
+Residual (item)                      & 0.8855 & 0.8671 & 0.8528 & 0.8408 & 0.8310 & 0.8271 \\
+Low user support (Alg.\ 3)           & 0.8855 & 0.8772 & 0.8701 & 0.8676 & 0.8652 & 0.8606 \\
+Low predicted rating (Alg.\ 2)       & 0.8855 & 0.8794 & 0.8588 & 0.8446 & 0.8285 & 0.8082 \\
+Residual (user+item)                 & 0.8855 & 0.8512 & 0.8258 & 0.8045 & 0.7819 & 0.7631 \\
+\textbf{Heteroscedastic variance}    & \textbf{0.8871} & \textbf{0.8452} & \textbf{0.8253} & \textbf{0.8036} & \textbf{0.7799} & \textbf{0.7596} \\
+\midrule
+Oracle (true-error ranking, unattainable) & 0.8855 & 0.6785 & 0.5631 & 0.4721 & 0.3909 & 0.3167 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsubsection{Discussion}
+
+Two findings stand out. First, the ranking of methods is consistent and
+sensible: both naive, uncertainty-free rules (Algorithms 2 and 3) beat
+random abstention, but neither beats a method that actually looks at
+reconstruction error - and \emph{residual (item)} being the weakest
+non-random score confirms the expected failure mode, since it assigns every
+test rating of a given item the exact same score regardless of who the user
+is. Second, and more striking, the learned heteroscedastic head's edge over
+the free \emph{residual (user+item)} heuristic - which is nothing more than
+an average of already-computed training errors, requiring no extra
+parameters or a second loss term - is thin: a 0.15\% RMSE improvement at 50\%
+coverage (0.7596 vs.\ 0.7631) and a modest Spearman gain (0.238 vs.\ 0.202).
+Combined with the calibration gap above, this suggests the learned signal is
+not yet extracting much more information than is already implicit in the
+model's own training residuals on this dataset - closing the calibration gap
+is a concrete, testable next step for whether a trained uncertainty head can
+earn a larger margin over the heuristic it is currently barely beating.

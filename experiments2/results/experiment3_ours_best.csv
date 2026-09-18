@@ -1,0 +1,10 @@
+method,dataset,best_r,best_lam,val_rmse,test_rmse,seconds
+"Ours (numpy, r x lambda)",ml-100k,2,0.4,0.9221,0.9189,2168.4
+"Ours (numpy, r x lambda)",ml-1m,5,0.7,0.8729,0.8682,12327.8
+"Ours (numpy, r x lambda)",douban,3,0.5,0.7703,0.7674,11648.6
+"Ours (numpy, r x lambda)",amazon-games,100,1.6,1.1844,1.174,36635.7
+"Ours (numpy, r x lambda)",ml-100k,2,0.4,0.9221,0.9189,43.6
+"Ours (numpy, r x lambda)",ml-1m,5,0.7,0.8729,0.8682,430.2
+"Ours (numpy, r x lambda)",douban,3,0.5,0.7703,0.7674,556.9
+"Ours (numpy, r x lambda)",amazon-games,100,1.6,1.1844,1.174,228.3
+"Ours (numpy, r x lambda)",ml-100k,2,0.4,0.9795,0.9834,49.3

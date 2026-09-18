@@ -1,0 +1,10 @@
+method,dataset,best_r,val_rmse,test_rmse,seconds
+"Plain MF (numpy, r-only)",ml-100k,2,0.8988,0.9004,33.9
+"Plain MF (numpy, r-only)",ml-1m,5,0.8715,0.8673,309.9
+"Plain MF (numpy, r-only)",douban,3,0.7712,0.768,391.9
+"Plain MF (numpy, r-only)",amazon-games,100,1.183,1.1737,155.4
+"Plain MF (numpy, r-only)",ml-100k,2,0.8988,0.9004,12.8
+"Plain MF (numpy, r-only)",ml-1m,5,0.8715,0.8673,128.6
+"Plain MF (numpy, r-only)",douban,3,0.7712,0.768,165.3
+"Plain MF (numpy, r-only)",amazon-games,100,1.183,1.1737,69.0
+"Plain MF (numpy, r-only)",ml-100k,2,0.9555,0.9666,14.7

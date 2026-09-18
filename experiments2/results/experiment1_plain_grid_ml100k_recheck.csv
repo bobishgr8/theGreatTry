@@ -1,0 +1,10 @@
+method,dataset,r,val_rmse,seconds
+"Plain MF (numpy, r-only)",ml-100k,2,0.9555,17.6
+"Plain MF (numpy, r-only)",ml-100k,3,0.9612,17.1
+"Plain MF (numpy, r-only)",ml-100k,4,0.9595,16.4
+"Plain MF (numpy, r-only)",ml-100k,5,0.9598,16.5
+"Plain MF (numpy, r-only)",ml-100k,1,1.017,19.9
+"Plain MF (numpy, r-only)",ml-100k,10,1.0003,17.2
+"Plain MF (numpy, r-only)",ml-100k,20,1.0592,15.6
+"Plain MF (numpy, r-only)",ml-100k,50,1.1112,15.5
+"Plain MF (numpy, r-only)",ml-100k,100,1.1011,15.8

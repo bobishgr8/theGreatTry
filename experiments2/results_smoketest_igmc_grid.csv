@@ -1,0 +1,2 @@
+method,dataset,hidden_dim,n_layers,lr,weight_decay,val_rmse,seconds
+IGMC,ml-100k,16,2,0.01,0.0001,1.865,2.0

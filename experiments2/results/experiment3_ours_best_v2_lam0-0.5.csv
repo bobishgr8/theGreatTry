@@ -1,0 +1,5 @@
+method,dataset,best_r,best_lam,val_rmse,test_rmse,seconds
+"Ours (numpy, r x lambda)",ml-100k,2,0.4,0.9221,0.9189,1138.3
+"Ours (numpy, r x lambda)",ml-1m,5,0.5,0.8747,0.8693,10905.2
+"Ours (numpy, r x lambda)",douban,3,0.5,0.7703,0.7674,13688.7
+"Ours (numpy, r x lambda)",amazon-games,100,0.2,1.1819,1.1718,9495.5

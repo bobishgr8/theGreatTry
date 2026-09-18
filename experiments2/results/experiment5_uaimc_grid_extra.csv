@@ -1,0 +1,4 @@
+method,dataset,hidden_dim,rank,lam,val_rmse,seconds
+UA-IMC (faithful),ml-1m,16,10,0.01,0.8733,3333.0
+UA-IMC (faithful),douban,16,5,0.003,0.7738,4779.9
+UA-IMC (faithful),amazon-games,16,5,0.003,1.1446,730.5

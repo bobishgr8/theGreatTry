@@ -1,0 +1,7 @@
+method,dataset,r,best_r_u,best_lam,val_rmse,test_rmse,seconds
+"Ours rank-ablation (numpy, r_u x lambda)",ml-100k,2,1,0.1,0.9807,0.9731,567.5
+"Ours rank-ablation (numpy, r_u x lambda)",ml-1m,5,1,0.1,0.938,0.9334,3533.9
+"Ours rank-ablation (numpy, r_u x lambda)",douban,3,2,0.1,0.8244,0.821,6464.9
+"Ours rank-ablation (numpy, r_u x lambda)",ml-100k,2,1,0.1,0.9807,0.9731,50.0
+"Ours rank-ablation (numpy, r_u x lambda)",ml-1m,5,1,0.1,0.938,0.9334,474.2
+"Ours rank-ablation (numpy, r_u x lambda)",douban,3,2,0.1,0.8244,0.821,560.4

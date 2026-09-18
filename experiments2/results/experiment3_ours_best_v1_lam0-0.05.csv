@@ -1,0 +1,4 @@
+method,dataset,best_r,best_lam,val_rmse,test_rmse,seconds
+"Ours (numpy, r x lambda)",ml-100k,100,0.05,1.0222,1.0125,529.1
+"Ours (numpy, r x lambda)",ml-1m,100,0.05,1.0092,1.0054,5277.9
+"Ours (numpy, r x lambda)",douban,100,0.05,0.8642,0.8614,7212.7

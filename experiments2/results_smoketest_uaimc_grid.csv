@@ -1,0 +1,4 @@
+method,dataset,hidden_dim,rank,lam,val_rmse,seconds
+UA-IMC (faithful),ml-100k,32,10,0.01,1.0281,2.5
+UA-IMC (faithful),ml-100k,16,10,0.01,1.0281,0.6
+UA-IMC (faithful),ml-100k,32,10,0.001,1.0281,0.3

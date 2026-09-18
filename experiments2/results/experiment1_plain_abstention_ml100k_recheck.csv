@@ -1,0 +1,13 @@
+method,dataset,p,selective_rmse,best_r,val_rmse,seconds
+"Plain MF (numpy, r-only) (rand)",ml-100k,0.0,0.9666,2,0.9555,49.9
+"Plain MF (numpy, r-only) (rand)",ml-100k,0.05,0.9674,2,0.9555,49.9
+"Plain MF (numpy, r-only) (rand)",ml-100k,0.1,0.9683,2,0.9555,49.9
+"Plain MF (numpy, r-only) (rand)",ml-100k,0.2,0.9666,2,0.9555,49.9
+"Plain MF (numpy, r-only) (val)",ml-100k,0.0,0.9666,2,0.9555,49.9
+"Plain MF (numpy, r-only) (val)",ml-100k,0.05,0.959,2,0.9555,49.9
+"Plain MF (numpy, r-only) (val)",ml-100k,0.1,0.9566,2,0.9555,49.9
+"Plain MF (numpy, r-only) (val)",ml-100k,0.2,0.9502,2,0.9555,49.9
+"Plain MF (numpy, r-only) (supp)",ml-100k,0.0,0.9666,2,0.9555,49.9
+"Plain MF (numpy, r-only) (supp)",ml-100k,0.05,0.962,2,0.9555,49.9
+"Plain MF (numpy, r-only) (supp)",ml-100k,0.1,0.9604,2,0.9555,49.9
+"Plain MF (numpy, r-only) (supp)",ml-100k,0.2,0.9558,2,0.9555,49.9

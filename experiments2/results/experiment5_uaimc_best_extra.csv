@@ -1,0 +1,13 @@
+method,dataset,p,selective_rmse,best_hidden,best_rank,best_lam,val_rmse,seconds
+UA-IMC (faithful),ml-1m,0.0,0.8522,16,10,0.01,0.8733,9652.1
+UA-IMC (faithful),ml-1m,0.05,0.8577,16,10,0.01,0.8733,9652.1
+UA-IMC (faithful),ml-1m,0.1,0.859,16,10,0.01,0.8733,9652.1
+UA-IMC (faithful),ml-1m,0.2,0.8589,16,10,0.01,0.8733,9652.1
+UA-IMC (faithful),douban,0.0,0.7674,16,5,0.003,0.7738,10562.4
+UA-IMC (faithful),douban,0.05,0.7742,16,5,0.003,0.7738,10562.4
+UA-IMC (faithful),douban,0.1,0.7801,16,5,0.003,0.7738,10562.4
+UA-IMC (faithful),douban,0.2,0.7921,16,5,0.003,0.7738,10562.4
+UA-IMC (faithful),amazon-games,0.0,1.0969,16,5,0.003,1.1446,1634.1
+UA-IMC (faithful),amazon-games,0.05,1.0873,16,5,0.003,1.1446,1634.1
+UA-IMC (faithful),amazon-games,0.1,1.0923,16,5,0.003,1.1446,1634.1
+UA-IMC (faithful),amazon-games,0.2,1.1108,16,5,0.003,1.1446,1634.1

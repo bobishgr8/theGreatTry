@@ -1,0 +1,22 @@
+method,dataset,hidden_dim,rank,lam,val_rmse,seconds
+UA-IMC (faithful),ml-100k,32,10,0.01,0.9057,291.6
+UA-IMC (faithful),ml-100k,16,10,0.01,0.9058,320.9
+UA-IMC (faithful),ml-100k,24,10,0.01,0.9059,273.1
+UA-IMC (faithful),ml-100k,48,10,0.01,0.9058,332.2
+UA-IMC (faithful),ml-100k,32,5,0.01,0.9075,176.0
+UA-IMC (faithful),ml-100k,32,8,0.01,0.9057,315.9
+UA-IMC (faithful),ml-100k,32,15,0.01,0.9044,152.0
+UA-IMC (faithful),ml-100k,32,20,0.01,0.911,139.4
+UA-IMC (faithful),ml-100k,32,15,0.003,0.9134,138.8
+UA-IMC (faithful),ml-100k,32,15,0.03,0.8983,164.1
+UA-IMC (faithful),ml-100k,32,15,0.1,0.9415,759.5
+UA-IMC (faithful),ml-100k,16,15,0.03,0.8984,333.8
+UA-IMC (faithful),ml-100k,24,15,0.03,0.8984,348.6
+UA-IMC (faithful),ml-100k,48,15,0.03,0.8984,327.9
+UA-IMC (faithful),ml-100k,32,5,0.03,0.9019,193.0
+UA-IMC (faithful),ml-100k,32,8,0.03,0.8988,169.5
+UA-IMC (faithful),ml-100k,32,10,0.03,0.9013,170.7
+UA-IMC (faithful),ml-100k,32,20,0.03,0.9,158.0
+UA-IMC (faithful),ml-1m,16,10,0.01,0.8733,5449.2
+UA-IMC (faithful),ml-1m,24,10,0.01,0.8734,4629.7
+UA-IMC (faithful),ml-1m,32,10,0.01,0.8733,4599.9

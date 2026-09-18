@@ -1,0 +1,384 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Overnight Run Status</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef1ef;
+    --surface: #ffffff;
+    --surface-2: #f5f7f5;
+    --ink: #10181a;
+    --ink-muted: #5c6d6c;
+    --ink-faint: #8a9997;
+    --border: #d7dfdb;
+    --border-strong: #b9c6c1;
+    --accent: #b6631f;
+    --accent-soft: #f3e2cf;
+    --done: #1f8a5f;
+    --done-soft: #dcf0e6;
+    --running: #c17f0a;
+    --running-soft: #faedd2;
+    --pending: #8a9997;
+    --pending-soft: #eaeeec;
+    --skip: #8a7a9c;
+    --skip-soft: #ece6f2;
+    --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1413;
+      --surface: #161e1d;
+      --surface-2: #1b2422;
+      --ink: #eaf1ee;
+      --ink-muted: #9fb0ac;
+      --ink-faint: #6d7d79;
+      --border: #2a3634;
+      --border-strong: #3c4b48;
+      --accent: #e08a3e;
+      --accent-soft: #3a2c1a;
+      --done: #4ec98f;
+      --done-soft: #163227;
+      --running: #e3ab41;
+      --running-soft: #3a2e10;
+      --pending: #7c8d89;
+      --pending-soft: #202a28;
+      --skip: #b39bd0;
+      --skip-soft: #241f30;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1413;
+    --surface: #161e1d;
+    --surface-2: #1b2422;
+    --ink: #eaf1ee;
+    --ink-muted: #9fb0ac;
+    --ink-faint: #6d7d79;
+    --border: #2a3634;
+    --border-strong: #3c4b48;
+    --accent: #e08a3e;
+    --accent-soft: #3a2c1a;
+    --done: #4ec98f;
+    --done-soft: #163227;
+    --running: #e3ab41;
+    --running-soft: #3a2e10;
+    --pending: #7c8d89;
+    --pending-soft: #202a28;
+    --skip: #b39bd0;
+    --skip-soft: #241f30;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    padding: 0 20px;
+    padding-block: 28px 60px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 32px;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-strong);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: clamp(24px, 4vw, 32px);
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .run-path {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 8px;
+  }
+
+  .status-block { text-align: right; min-width: 220px; }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 5px 11px;
+    border-radius: 100px;
+  }
+  .status-pill.running { background: var(--running-soft); color: var(--running); }
+  .status-pill.done { background: var(--done-soft); color: var(--done); }
+  .status-pill.failed { background: #f6dede; color: #b23b3b; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status-pill.running .dot { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @media (prefers-reduced-motion: reduce) { .status-pill.running .dot { animation: none; } }
+
+  .updated { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); margin-top: 8px; }
+
+  .overall {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 14px;
+    align-items: baseline;
+    margin-bottom: 28px;
+  }
+  .overall-label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); }
+  .overall-frac { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .overall-track {
+    grid-column: 1 / -1;
+    height: 8px;
+    border-radius: 5px;
+    background: var(--pending-soft);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .overall-fill {
+    height: 100%;
+    border-radius: 5px 0 0 5px;
+    background: linear-gradient(90deg, var(--accent), var(--running));
+    transition: width 0.6s ease;
+  }
+
+  .now-line {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--running-soft);
+    border: 1px solid color-mix(in srgb, var(--running) 35%, var(--border));
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+  .now-line b { color: var(--running); }
+
+  .note-line {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  .note-line b { color: var(--ink); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card.is-running { border-color: color-mix(in srgb, var(--running) 45%, var(--border)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--running) 18%, transparent); }
+  .card.is-done { border-color: color-mix(in srgb, var(--done) 30%, var(--border)); }
+
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card-id { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .card-name { font-family: var(--mono); font-weight: 600; font-size: 15px; margin: 2px 0 1px; }
+  .card-sub { font-size: 12.5px; color: var(--ink-muted); }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .chip.done { background: var(--done-soft); color: var(--done); }
+  .chip.running { background: var(--running-soft); color: var(--running); }
+  .chip.pending { background: var(--pending-soft); color: var(--pending); }
+
+  .datasets { display: flex; flex-direction: column; gap: 6px; }
+  .ds-row { display: grid; grid-template-columns: 84px 1fr auto; align-items: center; gap: 10px; }
+  .ds-name { font-family: var(--mono); font-size: 12px; color: var(--ink-muted); }
+  .ds-track { height: 6px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+  .ds-fill { height: 100%; }
+  .ds-fill.done { background: var(--done); width: 100%; }
+  .ds-fill.running { background: var(--running); }
+  .ds-fill.pending { background: transparent; width: 0; }
+  .ds-fill.skip { background: repeating-linear-gradient(135deg, var(--skip), var(--skip) 3px, transparent 3px, transparent 6px); width: 100%; }
+  .ds-val { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; text-align: right; min-width: 52px; }
+  .ds-val.hit { color: var(--ink); }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">theGreatTry / experiments2 — corrected ML-100K rerun</p>
+      <h1>overnight batch — exp 1, 3, 5, 6, 7, 8</h1>
+      <p class="run-path">C:\Users\potato\Desktop\research\theGreatTry\experiments2\results\*_final.csv / *_extra.csv</p>
+    </div>
+    <div class="status-block">
+      <span class="status-pill running" id="statusPill"><span class="dot"></span><span id="statusText">running</span></span>
+      <p class="updated" id="updatedText">updated —</p>
+    </div>
+  </header>
+
+  <div class="now-line" id="nowLine"></div>
+  <div class="note-line" id="noteLine"></div>
+
+  <div class="overall">
+    <span class="overall-label">dataset x experiment cells complete</span>
+    <span class="overall-frac" id="overallFrac">—</span>
+    <div class="overall-track"><div class="overall-fill" id="overallFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="grid" id="cards"></div>
+
+  <footer>
+    <span>val RMSE shown for exp 5/6/7/8 (hyperparam-selection score); test RMSE for exp 1/3</span>
+    <span id="footTime"></span>
+  </footer>
+</div>
+
+<script>
+// ---- Snapshot data: regenerated by re-reading experiments2/results/*.csv and the
+// live batch log on each check-in, then republished. This run follows the ml-100k
+// dataset-identity fix (was ml-latest-small mislabeled as ml-100k; now the real
+// 943x1682/100k-rating GroupLens u.data benchmark) - not comparable to the previous
+// "Overnight Run Status" artifact, which predates the fix. ----
+const RUN = {
+  updated: "2026-09-17T18:58:31",
+  status: "running",
+  now: "Ours (exp 3) on douban: 29/288 r\u00d7\u03bb configs, 1h12m elapsed, best val_rmse=0.8173 so far. ml-100k and ml-1m already finished for this experiment (7.9h for ml-1m alone).",
+};
+
+const ALL_DATASETS = ["ml-100k", "ml-1m", "douban", "amazon-games"];
+
+const EXPERIMENTS = [
+  { id: 1, name: "Plain MF", sub: "numpy, r-only", datasets: {
+    "ml-100k": { s: "done", v: 0.9666 }, "ml-1m": { s: "done", v: 0.8673 },
+    "douban": { s: "done", v: 0.7680 }, "amazon-games": { s: "done", v: 1.1737 } } },
+  { id: 3, name: "Ours", sub: "joint uncertainty MF", datasets: {
+    "ml-100k": { s: "done", v: 0.9542 }, "ml-1m": { s: "done", v: 0.8682 },
+    "douban": { s: "running", p: 0.10 }, "amazon-games": { s: "pending" } } },
+  { id: 7, name: "SoftImpute", sub: "\u03c3 sweep, dense SVD", datasets: {
+    "ml-100k": { s: "done", v: 0.9660 }, "ml-1m": { s: "done", v: 0.8866 },
+    "douban": { s: "skip", note: "dense SVD too slow" }, "amazon-games": { s: "skip", note: "over size limit" } } },
+  { id: 6, name: "AutoRec", sub: "item-based autoencoder", datasets: {
+    "ml-100k": { s: "done", v: 0.8978 }, "ml-1m": { s: "done", v: 0.8492 },
+    "douban": { s: "done", v: 0.7730 }, "amazon-games": { s: "skip", note: "over size limit" } } },
+  { id: 8, name: "IGMC", sub: "1-hop enclosing subgraphs", datasets: {
+    "ml-100k": { s: "done", v: 0.9807 }, "ml-1m": { s: "pending" },
+    "douban": { s: "pending" }, "amazon-games": { s: "pending" } } },
+  { id: 5, name: "UA-IMC", sub: "faithful reimplementation", datasets: {
+    "ml-100k": { s: "done", v: 0.9488 }, "ml-1m": { s: "pending" },
+    "douban": { s: "pending" }, "amazon-games": { s: "pending" } } },
+];
+
+function fmt(v) { return v == null ? "" : v.toFixed(4); }
+
+function dsRow(name, d) {
+  d = d || { s: "pending" };
+  let fillClass = d.s, val = "";
+  if (d.s === "done") val = `<span class="ds-val hit">${fmt(d.v)}</span>`;
+  else if (d.s === "running") val = `<span class="ds-val">${d.p != null ? Math.round(d.p * 100) + "%" : "\u2026"}</span>`;
+  else if (d.s === "skip") val = `<span class="ds-val">${d.note || "skipped"}</span>`;
+  else val = `<span class="ds-val">\u2014</span>`;
+  const width = d.s === "running" ? Math.round((d.p || 0.08) * 100) : 100;
+  return `<div class="ds-row">
+    <span class="ds-name">${name}</span>
+    <div class="ds-track"><div class="ds-fill ${fillClass}" style="width:${d.s === 'running' ? width : ''}%"></div></div>
+    ${val}
+  </div>`;
+}
+
+function card(exp) {
+  const states = Object.values(exp.datasets).map(d => d.s);
+  const anyRunning = states.includes("running");
+  const allDone = states.every(s => s === "done" || s === "skip");
+  const cls = anyRunning ? "is-running" : allDone ? "is-done" : "";
+  const chip = anyRunning
+    ? `<span class="chip running">running</span>`
+    : allDone
+      ? `<span class="chip done">done</span>`
+      : `<span class="chip pending">queued</span>`;
+  const rows = Object.keys(exp.datasets).map(name => dsRow(name, exp.datasets[name])).join("");
+  return `<div class="card ${cls}">
+    <div class="card-top">
+      <div>
+        <p class="card-id">EXPERIMENT ${exp.id}</p>
+        <p class="card-name">${exp.name}</p>
+        <p class="card-sub">${exp.sub}</p>
+      </div>
+      ${chip}
+    </div>
+    <div class="datasets">${rows}</div>
+  </div>`;
+}
+
+const order = [1, 3, 7, 6, 8, 5];
+document.getElementById("cards").innerHTML = order
+  .map(id => EXPERIMENTS.find(e => e.id === id))
+  .map(card).join("");
+
+document.getElementById("nowLine").innerHTML = "\u25b8 now running: <b>" + RUN.now + "</b>";
+document.getElementById("noteLine").innerHTML =
+  "Queue order tonight: SoftImpute tail \u2192 <b>Ours</b> \u2192 IGMC (ml-1m/douban/amazon, single seeded config) \u2192 UA-IMC (same) \u2192 heatmaps. " +
+  "SoftImpute skips Douban (dense full-SVD cost scales ~cubically with matrix size \u2014 ml-1m alone took ~50min/config, Douban's matrix is ~3x bigger). " +
+  "IGMC/UA-IMC reuse known-best hyperparameters (no fresh grid search) to keep the GNN stages bounded.";
+
+let doneCount = 0, totalCount = 0;
+EXPERIMENTS.forEach(exp => Object.values(exp.datasets).forEach(d => {
+  totalCount++;
+  if (d.s === "done" || d.s === "skip") doneCount++;
+}));
+document.getElementById("overallFrac").textContent = doneCount + " / " + totalCount;
+document.getElementById("overallFill").style.width = Math.round((doneCount / totalCount) * 100) + "%";
+
+const statusPill = document.getElementById("statusPill");
+statusPill.className = "status-pill " + RUN.status;
+document.getElementById("statusText").textContent = RUN.status;
+
+const upd = new Date(RUN.updated);
+document.getElementById("updatedText").textContent = "updated " + upd.toLocaleString(undefined, { hour: "2-digit", minute: "2-digit", month: "short", day: "numeric" });
+document.getElementById("footTime").textContent = "snapshot, refreshed by the monitoring loop \u2014 not live";
+</script>
+
+</body></html>
